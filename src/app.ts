@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
+import { CarRoutes } from './app/modules/car/car.route';
 
 const app: Application = express();
 
@@ -13,6 +14,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // application routes here
-// empty for now
+app.use('/api/cars', CarRoutes);
 
 export default app;
