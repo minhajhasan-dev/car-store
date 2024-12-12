@@ -14,7 +14,7 @@ const carSchema = new Schema<Car>(
     },
     description: { type: String, required: true },
     quantity: { type: Number, required: true },
-    isStock: { type: Boolean, required: true },
+    inStock: { type: Boolean, required: true },
     isDeleted: { type: Boolean, required: true, default: false },
   },
   { timestamps: true },

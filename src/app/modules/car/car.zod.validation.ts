@@ -15,7 +15,7 @@ const carSchema = z.object({
     .number()
     .int()
     .positive({ message: 'Quantity must be a positive integer' }),
-  isStock: z.boolean(),
+  inStock: z.boolean(),
   isDeleted: z.boolean().default(false),
 });
 

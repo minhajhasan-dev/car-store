@@ -6,7 +6,7 @@ export type Car = {
   category: 'Sedan' | 'SUV' | 'Truck' | 'Coupe' | 'Convertible';
   description: string;
   quantity: number;
-  isStock: boolean;
+  inStock: boolean;
   createdAt?: Date;
   isDeleted: boolean;
   updatedAt?: Date;

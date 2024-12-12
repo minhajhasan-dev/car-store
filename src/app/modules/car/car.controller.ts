@@ -1,11 +1,27 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import { CarModel } from '../car.model';
 import { carServices } from './car.service';
 import carSchema from './car.zod.validation';
 
-const createCar = async (req: Request, res: Response) => {
+const createCar = async (req: Request, res: Response): Promise<void> => {
   try {
     const carData = carSchema.parse(req.body);
+
+    // Check for duplicate car
+    const existingCar = await CarModel.findOne({
+      brand: carData.brand,
+      model: carData.model,
+      year: carData.year,
+    });
+
+    if (existingCar) {
+      res.status(400).json({
+        success: false,
+        message: 'This car already exists',
+      });
+      return;
+    }
 
     const result = await carServices.createCarInDB(carData);
 
@@ -27,13 +43,13 @@ const getAllCars = async (req: Request, res: Response) => {
 
     if (result.length === 0) {
       res.status(404).json({
-        success: false,
+        status: false,
         message: 'No cars found',
       });
     }
 
     res.status(200).json({
-      success: true,
+      status: true,
       message: 'Cars retrieved successfully',
       data: result,
     });
@@ -45,18 +61,18 @@ const getAllCars = async (req: Request, res: Response) => {
 // get a single car by id
 const getSingleCar = async (req: Request, res: Response) => {
   try {
-    const {carId} = req.params;
+    const { carId } = req.params;
     const result = await carServices.getSingleCarFromDB(carId);
 
     if (!result || result.length === 0) {
       res.status(404).json({
-        success: false,
+        status: false,
         message: 'Car not found',
       });
     }
 
     res.status(200).json({
-      success: true,
+      status: true,
       message: 'Car retrieved successfully',
       data: result,
     });
@@ -66,16 +82,19 @@ const getSingleCar = async (req: Request, res: Response) => {
 };
 
 // update a car by id
-const updateCar = async (req: Request, res: Response) => {
+const updateCar = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {carId} = req.params;
-    const result = await carServices.updateCarFromDB(carId);
+    const { carId } = req.params;
+    const { price, quantity } = req.body;
+
+    const result = await carServices.updateCarFromDB(carId, { price, quantity });
 
     if (!result) {
       res.status(404).json({
         success: false,
         message: 'Car not found',
       });
+      return;
     }
 
     res.status(200).json({
@@ -88,10 +107,9 @@ const updateCar = async (req: Request, res: Response) => {
   }
 };
 
-// delete a car by id
-const deleteCar = async (req: Request, res: Response) => {
+const deleteCar = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {carId} = req.params;
+    const { carId } = req.params;
     const result = await carServices.deleteCarFromDB(carId);
 
     if (!result) {
@@ -99,6 +117,7 @@ const deleteCar = async (req: Request, res: Response) => {
         success: false,
         message: 'Car not found',
       });
+      return;
     }
 
     res.status(200).json({
@@ -112,7 +131,7 @@ const deleteCar = async (req: Request, res: Response) => {
 };
 
 // handle error here
-const handleError = (error: unknown, res: Response) => {
+const handleError = (error: unknown, res: Response): void => {
   if (error instanceof z.ZodError) {
     res.status(400).json({
       success: false,

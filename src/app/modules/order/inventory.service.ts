@@ -1,4 +1,4 @@
-import {CarModel} from '../car.model';
+import { CarModel } from '../car.model';
 
 const updateInventory = async (carId: string, orderedQuantity: number) => {
   const car = await CarModel.findById(carId);
@@ -12,7 +12,7 @@ const updateInventory = async (carId: string, orderedQuantity: number) => {
   }
 
   car.quantity -= orderedQuantity;
-  car.isStock = car.quantity > 0;
+  car.inStock = car.quantity > 0;
 
   await car.save();
 };

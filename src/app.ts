@@ -9,14 +9,13 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-// root route
-app.get('/', (req: Request, res: Response) => {
-  res.json('Welcome to the Car Store API');
-});
-
 // application routes here
 app.use('/api/cars', CarRoutes);
 app.use('/api/orders', OrderRoutes);
 
+// root route
+app.get('/', (req: Request, res: Response) => {
+  res.json('Welcome to the Car Store API');
+});
 
 export default app;

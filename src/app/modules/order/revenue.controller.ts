@@ -15,13 +15,13 @@ const calculateTotalRevenue = async (req: Request, res: Response) => {
     const totalRevenue = revenueResult.length ? revenueResult[0].totalRevenue : 0;
 
     res.status(200).json({
-      success: true,
-      message: 'Your Revenue calculated successfully',
+      status: true,
+      message: 'Revenue calculated successfully',
       data: { totalRevenue },
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+      status: false,
       message: 'Failed to calculate revenue',
       error: error instanceof Error ? error.message : 'Unknown error',
     });

@@ -30,10 +30,10 @@ const getSingleCarFromDB = async (id: string) => {
 };
 
 // update a car by id
-const updateCarFromDB = async (id: string) => {
+const updateCarFromDB = async (id: string, updateData: { price: number; quantity: number }) => {
   const result = await CarModel.findOneAndUpdate(
     { _id: new mongoose.Types.ObjectId(id) },
-    { price: 27000, quantity: 30 },
+    { price: updateData.price, quantity: updateData.quantity },
     { new: true, runValidators: true },
   );
   return result;
